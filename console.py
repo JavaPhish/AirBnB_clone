@@ -14,7 +14,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_EOF(self, line):
         """ do_EOF: End of File handling """
+        print("") # Print a new line, since EOF doesnt do that on its own
         return True
+
+    def emptyline(self):
+        """ emptyline: if an empty line is passed, do nothing """
+        pass
 
     # Help methods
     def help_quit(self):
