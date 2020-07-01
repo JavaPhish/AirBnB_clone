@@ -4,7 +4,6 @@
 
 import uuid
 from datetime import datetime
-from models import storage
 import copy
 
 
@@ -13,7 +12,7 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """ initial stuff """
-
+        from models import storage
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         self.id = str(uuid.uuid4())
@@ -28,8 +27,6 @@ class BaseModel:
             form = '%Y-%m-%dT%H:%M:%S.%f'
             self.created_at = datetime.strptime(kwargs['created_at'], form)
             self.updated_at = datetime.now()
-        else:
-            storage.new(self)
 
     def __str__(self):
         """ Prints formatted string about current class """
@@ -51,6 +48,7 @@ class BaseModel:
 
     def save(self):
         """ Currently just updates the updated at time """
-
+        from models import storage
         self.updated_at = datetime.now()
+        storage.new(self)
         storage.save()
