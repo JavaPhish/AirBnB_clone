@@ -3,13 +3,20 @@
 
 
 import cmd
+import models
+from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
     """ HBNBCommand - Simple command tests """
     prompt = "(hbnb) "
+    PossibleClasses = ["BaseModel"]
 
     # Command methods
+    def emptyline(self):
+        """ emptyline: if an empty line is passed, do nothing """
+        pass
+
     def do_quit(self, line):
         """ do_quit: Quit command """
         return True
@@ -19,9 +26,69 @@ class HBNBCommand(cmd.Cmd):
         print("")  # Print a new line, since EOF doesnt do that on its own
         return True
 
-    def emptyline(self):
-        """ emptyline: if an empty line is passed, do nothing """
-        pass
+    def do_create(self, line):
+        """ do_create: Create a new class """
+        if line == "":
+            print("** class name missing **")
+        elif line == "BaseModel":
+            NewInstance = BaseModel()
+            models.storage.save()
+            print(NewInstance.id)
+        else:
+            print("** class doesn't exist **")
+
+    def do_show(self, line):
+        """ do_show: Print the string representation of an instance """
+        splitted = line.split(" ")
+        if len(splitted[0]) == 0:
+            print("** class name missing **")
+        elif splitted[0] in self.PossibleClasses:
+            if len(splitted) == 2:
+                for string, info in (models.storage.all()).items():
+                    if string == "{}.{}".format(splitted[0], splitted[1]):
+                        print(info)
+                        return
+                print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
+            print("** class doesn't exist **")
+
+    def do_destroy(self, line):
+        """ do_destroy: Print the string representation of an instance """
+        splitted = line.split(" ")
+        if len(splitted[0]) == 0:
+            print("** class name missing **")
+        elif splitted[0] in self.PossibleClasses:
+            if len(splitted) == 2:
+                for inst, i in (models.storage.all()).items():
+                    # i goes unused, can't loop without it for some reason
+                    if inst == "{}.{}".format(splitted[0], splitted[1]):
+                        del models.storage.all()[inst]
+                        models.storage.save()
+                        return
+                print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
+            print("** class doesn't exist **")
+
+    def do_all(self, line):
+        """ do_all: Print all instances, or all of a specific class """
+        final = []
+        splitted = line.split(" ")
+        if len(line) == 0:  # No specific class given
+            for string, info in (models.storage.all()).items():
+                final.append(str(info))
+            print(final)
+            return
+        if splitted[0] in self.PossibleClasses:
+            for string, info in (models.storage.all()).items():
+                if string.split(".")[0] == splitted[0]:
+                    final.append(str(info))
+            print(final)
+        else:
+            print("** class doesn't exist **")
 
     # Help methods
     def help_quit(self):
@@ -31,6 +98,25 @@ class HBNBCommand(cmd.Cmd):
     def help_EOF(self):
         """ help_EOF: Help documentation for EOF """
         print("EOF\nHandles End of File(?)")
+
+    def help_create(self):
+        """ help_create: Help documentation for Create """
+        print("create [Class name]\nCreate a new instance of a class")
+        print("Classes:\nBaseModel")
+
+    def help_show(self):
+        """ help_show: Help documentation for Show """
+        print("show [Class name] [Id]\nShow information", end="")
+        print("for an instance of a class")
+
+    def help_destroy(self):
+        """ help_destroy: Help documentation for Destroy """
+        print("destroy [Class name] [Id]\nDestroy an instance of a class")
+
+    def help_all(self):
+        """ help_all: Help documentation for All """
+        print("all [Class name]\nShow information for all instances", end="")
+        print("or all instances of a class")
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
