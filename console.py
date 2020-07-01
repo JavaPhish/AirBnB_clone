@@ -5,12 +5,25 @@
 import cmd
 import models
 from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
     """ HBNBCommand - Simple command tests """
     prompt = "(hbnb) "
-    PossibleClasses = ["BaseModel"]
+    PossibleClasses = [
+            "BaseModel",
+            "City",
+            "Review",
+            "Amenity",
+            "State",
+            "Place",
+            "User"]
 
     # Command methods
     def emptyline(self):
@@ -32,6 +45,30 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif line == "BaseModel":
             NewInstance = BaseModel()
+            models.storage.save()
+            print(NewInstance.id)
+        elif line == "Amenity":
+            NewInstance = Amenity()
+            models.storage.save()
+            print(NewInstance.id)
+        elif line == "City":
+            NewInstance = City()
+            models.storage.save()
+            print(NewInstance.id)
+        elif line == "Place":
+            NewInstance = Place()
+            models.storage.save()
+            print(NewInstance.id)
+        elif line == "Review":
+            NewInstance = Review()
+            models.storage.save()
+            print(NewInstance.id)
+        elif line == "State":
+            NewInstance = State()
+            models.storage.save()
+            print(NewInstance.id)
+        elif line == "User":
+            NewInstance = User()
             models.storage.save()
             print(NewInstance.id)
         else:
@@ -90,6 +127,9 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
+    def do_update(self, line):
+        """ do_update: Updates an instance """
+
     # Help methods
     def help_quit(self):
         """ help_quit: Help documentation for quit """
@@ -102,7 +142,8 @@ class HBNBCommand(cmd.Cmd):
     def help_create(self):
         """ help_create: Help documentation for Create """
         print("create [Class name]\nCreate a new instance of a class")
-        print("Classes:\nBaseModel")
+        print("Classes:\nBaseModel\nAmenity\nCity\nPlace")
+        print("Review\nState\nUser")
 
     def help_show(self):
         """ help_show: Help documentation for Show """
