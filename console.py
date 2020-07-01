@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ console.py: Main entry point for the HBNB command interpreter """
+
+
 import cmd
 
 
@@ -14,7 +16,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_EOF(self, line):
         """ do_EOF: End of File handling """
-        print("") # Print a new line, since EOF doesnt do that on its own
+        print("")  # Print a new line, since EOF doesnt do that on its own
         return True
 
     def emptyline(self):
