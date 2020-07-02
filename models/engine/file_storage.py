@@ -14,6 +14,7 @@ from models.place import Place
 from models.review import Review
 from models.city import City
 
+
 class FileStorage:
     """ Filestorage class """
 
