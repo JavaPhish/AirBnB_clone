@@ -45,31 +45,31 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif line == "BaseModel":
             NewInstance = BaseModel()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         elif line == "Amenity":
             NewInstance = Amenity()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         elif line == "City":
             NewInstance = City()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         elif line == "Place":
             NewInstance = Place()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         elif line == "Review":
             NewInstance = Review()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         elif line == "State":
             NewInstance = State()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         elif line == "User":
             NewInstance = User()
-            models.storage.save()
+            NewInstance.save()
             print(NewInstance.id)
         else:
             print("** class doesn't exist **")
@@ -129,6 +129,30 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """ do_update: Updates an instance """
+        splitted = line.split(" ")
+        if len(splitted[0]) == 0:
+            print("** class name missing **")
+        elif splitted[0] in self.PossibleClasses:
+            if len(splitted) >= 2:
+                for ClassName, inst in (models.storage.all()).items():
+                    # i goes unused, can't loop without it for some reason
+                    if ClassName == "{}.{}".format(splitted[0], splitted[1]):
+                        if len(splitted) == 2:
+                            print("** attribute name missing **")
+                            return
+                        if len(splitted) == 3:
+                            print("** value missing **")
+                            return
+                        if len(splitted) == 4:
+                            caster = type(getattr(inst, splitted[2]))
+                            setattr(inst, splitted[2], caster(splitted[3]))
+                            inst.save()
+                            return
+                print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
+            print("** class doesn't exist **")
 
     # Help methods
     def help_quit(self):
@@ -158,6 +182,11 @@ class HBNBCommand(cmd.Cmd):
         """ help_all: Help documentation for All """
         print("all [Class name]\nShow information for all instances", end="")
         print("or all instances of a class")
+
+    def help_update(self):
+        """ help_update: Help documentation for Update """
+        print("update [Class name] [Id] [Attribute name] [New value]")
+        print("Updates the attribute of an instance")
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
