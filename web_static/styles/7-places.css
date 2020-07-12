@@ -1,0 +1,32 @@
+.places h1 {
+	font-size: 30px;
+}
+
+article h2 {
+	font-size: 20px;
+}
+
+.places article {
+	width: 390px;
+	border: solid 1px #FF5A5F;
+	border-radius: 4px;
+	padding: 20px;
+	margin: 20px;
+	text-align: center;
+}
+
+.places .first {
+	float: left;
+}
+
+.places .second {
+	float: right;
+}
+
+.places .third {
+	float: left;
+}
+
+.places .fourth {
+	float: right;
+}
